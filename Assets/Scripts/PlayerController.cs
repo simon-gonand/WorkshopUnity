@@ -7,11 +7,14 @@ public class PlayerController : MonoBehaviour
     [Header("Stats")]
     public float speed;
     public float gravity;
+    public AnimationCurve groundAcceleration;
 
     [Header("References")]
     public Transform self;
 
     private Vector3 currentMove;
+    private Vector3 lastDirection;
+    private float timeStamp;
 
     // Start is called before the first frame update
     void Start()
@@ -25,8 +28,14 @@ public class PlayerController : MonoBehaviour
         currentMove.x += Input.GetAxis("Horizontal");
         currentMove.z += Input.GetAxis("Vertical");
 
+        // Calculate acceleration
+        if (Vector3.Dot(currentMove, lastDirection) < 0.0f)
+            timeStamp = Time.time;
+        float accelerationStep = Time.time - timeStamp;
+        float acceleration = groundAcceleration.Evaluate(accelerationStep);
+
         // Apply movement
-        self?.Translate(currentMove * Time.deltaTime * speed, Space.World);
+        self?.Translate(acceleration * currentMove * Time.deltaTime * speed, Space.World);
 
         // Rotate the direction where the player move
         if (currentMove != Vector3.zero)
