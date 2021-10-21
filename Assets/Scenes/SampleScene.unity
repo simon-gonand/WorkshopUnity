@@ -10850,7 +10850,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  maxAllowedJumps: 2
+  jumpForce: 5
   self: {fileID: 1536790863}
+  selfRigidbody: {fileID: 1536790865}
 --- !u!54 &1536790865
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -8,18 +8,25 @@ public class PlayerController : MonoBehaviour
     public float speed;
     public float gravity;
     public AnimationCurve groundAcceleration;
+    public int maxAllowedJumps;
+    public float jumpForce;
 
     [Header("References")]
     public Transform self;
+    public Transform selfHips;
+    public Rigidbody selfRigidbody;
 
     private Vector3 currentMove;
     private Vector3 lastDirection;
     private float timeStamp;
+    private int remainingJumps;
+    private bool isGrounded;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        remainingJumps = maxAllowedJumps;
+        isGrounded = false;
     }
 
     private void HorizontalUpdate()
@@ -44,7 +51,22 @@ public class PlayerController : MonoBehaviour
 
     private void VerticalUpdate()
     {
+        if (Input.GetButtonDown("Jump") && remainingJumps > 0)
+        {
+            --remainingJumps;
+            isGrounded = false;
+            ++currentMove.y;
+            selfRigidbody?.AddForce(currentMove * jumpForce, ForceMode.Impulse);
+        }
+    }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.position.y < selfHips.position.y)
+        {
+            isGrounded = true;
+            remainingJumps = maxAllowedJumps;
+        }
     }
 
     // Update is called once per frame
