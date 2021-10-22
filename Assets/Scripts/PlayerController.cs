@@ -91,5 +91,9 @@ public class PlayerController : MonoBehaviour
         currentMove = Vector3.zero;
         HorizontalUpdate();
         VerticalUpdate();
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            //Reload scene from 0
+        }
     }
 }

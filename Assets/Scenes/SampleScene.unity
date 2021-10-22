@@ -10489,10 +10489,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
-  minLimitYCam: 0
-  maxLimitYCam: 0
+  minLimitYCam: -50
+  maxLimitYCam: 50
   player: {fileID: 1668712472}
-  CameraAttached: {fileID: 652948978}
+  Rig: {fileID: 652948978}
   Pivot: {fileID: 788021262}
   self: {fileID: 963194228}
 --- !u!43 &989725525
