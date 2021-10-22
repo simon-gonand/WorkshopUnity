@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
             --remainingJumps;
             isGrounded = false;
             ++currentMove.y;
-            selfRigidbody?.AddForce(self.forward * currentMove.y * jumpForce, ForceMode.Impulse);
+            selfRigidbody?.AddForce((selfModel.forward + Vector3.up)* currentMove.y * jumpForce, ForceMode.Impulse);
         }
     }
 
