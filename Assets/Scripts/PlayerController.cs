@@ -6,15 +6,16 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
     public float speed;
-    public float gravity;
     public AnimationCurve groundAcceleration;
     public int maxAllowedJumps;
     public float jumpForce;
 
     [Header("References")]
     public Transform self;
+    public Transform selfModel;
     public Transform selfHips;
     public Rigidbody selfRigidbody;
+    public Transform cameraPivot;
 
     private Vector3 currentMove;
     private Vector3 lastDirection;
@@ -41,27 +42,42 @@ public class PlayerController : MonoBehaviour
         float accelerationStep = Time.time - timeStamp;
         float acceleration = groundAcceleration.Evaluate(accelerationStep);
 
+        // Get forward and right vector of the camera without the Y axis
+        Vector3 forwardWithoutY = new Vector3(cameraPivot.forward.x, 0.0f, cameraPivot.forward.z);
+        Vector3 rightWithoutY = new Vector3(cameraPivot.right.x, 0.0f, cameraPivot.right.z);
+        
         // Apply movement
-        self?.Translate(acceleration * currentMove * Time.deltaTime * speed, Space.World);
+        self?.Translate(rightWithoutY * acceleration * currentMove.x * Time.deltaTime * speed, Space.World);
+        self?.Translate(forwardWithoutY * acceleration * currentMove.z * Time.deltaTime * speed, Space.World);
 
         // Rotate the direction where the player move
         if (currentMove != Vector3.zero)
-            self.forward = currentMove;
+        {
+            // Calculate the direction of the player movement
+            Vector3 targetDirection = forwardWithoutY * currentMove.z;
+            targetDirection += rightWithoutY * currentMove.x;
+            targetDirection = targetDirection.normalized;
+            // Rotate player model
+            selfModel.forward = targetDirection;
+        }
+            
     }
 
     private void VerticalUpdate()
     {
+        // Jump
         if (Input.GetButtonDown("Jump") && remainingJumps > 0)
         {
             --remainingJumps;
             isGrounded = false;
             ++currentMove.y;
-            selfRigidbody?.AddForce(currentMove * jumpForce, ForceMode.Impulse);
+            selfRigidbody?.AddForce(self.forward * currentMove.y * jumpForce, ForceMode.Impulse);
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        // If player is touching the ground
         if (collision.transform.position.y < selfHips.position.y)
         {
             isGrounded = true;
