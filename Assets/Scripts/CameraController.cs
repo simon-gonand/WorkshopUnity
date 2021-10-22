@@ -16,16 +16,40 @@ public class CameraController : MonoBehaviour
 
     private Vector2 cameraRotation;
     private Vector3 offset;
+    private bool isInTexture;
 
     // Start is called before the first frame update
     void Start()
     {
         offset = Rig.position - player.position;
+        isInTexture = false;
+    }
+
+    private void CheckCollision()
+    {
+        RaycastHit hit;
+        if (Physics.SphereCast(self.position, self.lossyScale.x, self.forward, out hit))
+        {
+            if (hit.collider.tag != "Player")
+            {
+                float newAlpha = 0.0f;
+                if (isInTexture)
+                {
+                    newAlpha = 1.0f;
+                }
+
+                Color[] meshColor = hit.collider.gameObject.GetComponent<MeshRenderer>().material.GetColorArray("_Color");
+                Color newAlphaColor = new Color(meshColor[0].r, meshColor[0].g, meshColor[0].b, newAlpha);
+                Color[] newAlphaColorArray = { newAlphaColor };
+                hit.collider.gameObject.GetComponent<MeshRenderer>().material.SetColorArray("_Color", newAlphaColorArray);
+
+                isInTexture = !isInTexture;
+            }
+        }
     }
 
     private void HorizontalUpdate()
     {
-        
         Rig.position = player.position + offset;
     }
 
@@ -44,6 +68,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckCollision();
         HorizontalUpdate();
         VerticalUpdate();
     }
