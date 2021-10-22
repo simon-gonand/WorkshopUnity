@@ -25,26 +25,23 @@ public class CameraController : MonoBehaviour
         isInTexture = false;
     }
 
-    private void CheckCollision()
+
+    public void OnTriggerExit(Collider other)
     {
-        RaycastHit hit;
-        if (Physics.SphereCast(self.position, self.lossyScale.x, self.forward, out hit))
+        if (!other.CompareTag("Player"))
         {
-            if (hit.collider.tag != "Player")
+            float newAlpha = 1.0f;
+            /*if (isInTexture)
             {
-                float newAlpha = 0.0f;
-                if (isInTexture)
-                {
-                    newAlpha = 1.0f;
-                }
+                newAlpha = 1.0f;
+            }*/
 
-                Color[] meshColor = hit.collider.gameObject.GetComponent<MeshRenderer>().material.GetColorArray("_Color");
-                Color newAlphaColor = new Color(meshColor[0].r, meshColor[0].g, meshColor[0].b, newAlpha);
-                Color[] newAlphaColorArray = { newAlphaColor };
-                hit.collider.gameObject.GetComponent<MeshRenderer>().material.SetColorArray("_Color", newAlphaColorArray);
+            Color[] meshColor = other.gameObject.GetComponent<MeshRenderer>().material.GetColorArray("_Color");
+            Color newAlphaColor = new Color(meshColor[0].r, meshColor[0].g, meshColor[0].b, newAlpha);
+            Color[] newAlphaColorArray = { newAlphaColor };
+            other.gameObject.GetComponent<MeshRenderer>().material.SetColorArray("_Color", newAlphaColorArray);
 
-                isInTexture = !isInTexture;
-            }
+            isInTexture = !isInTexture;
         }
     }
 
@@ -68,7 +65,6 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckCollision();
         HorizontalUpdate();
         VerticalUpdate();
     }

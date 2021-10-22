@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public Transform selfModel;
     public Transform selfHips;
     public Rigidbody selfRigidbody;
+    public Animator selfAnimator;
     public Transform cameraPivot;
 
     private Vector3 currentMove;
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
     {
         remainingJumps = maxAllowedJumps;
         isGrounded = false;
+        selfAnimator.SetBool("IsGrounded", false);        
     }
 
     private void HorizontalUpdate()
@@ -60,7 +62,9 @@ public class PlayerController : MonoBehaviour
             // Rotate player model
             selfModel.forward = targetDirection;
         }
-            
+
+        // Update animations
+        selfAnimator.SetFloat("Speed", currentMove.x + currentMove.z);
     }
 
     private void VerticalUpdate()
@@ -70,6 +74,7 @@ public class PlayerController : MonoBehaviour
         {
             --remainingJumps;
             isGrounded = false;
+            selfAnimator.SetBool("IsGrounded", false);
             ++currentMove.y;
             selfRigidbody?.AddForce((selfModel.forward + Vector3.up)* currentMove.y * jumpForce, ForceMode.Impulse);
         }
@@ -81,6 +86,7 @@ public class PlayerController : MonoBehaviour
         if (collision.transform.position.y < selfHips.position.y)
         {
             isGrounded = true;
+            selfAnimator.SetBool("IsGrounded", true);
             remainingJumps = maxAllowedJumps;
         }
     }
