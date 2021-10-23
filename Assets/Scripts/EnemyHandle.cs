@@ -11,6 +11,8 @@ public class EnemyHandle : MonoBehaviour
     public ParticleSystem bloodDropFX;
 
     private bool isDie;
+    private bool _isAttacking;
+    public bool isAttacking { get => _isAttacking; }
     private Transform player;
 
     // Start is called before the first frame update
@@ -36,6 +38,14 @@ public class EnemyHandle : MonoBehaviour
         }
     }
 
+    private void IsAttackAnimationFinished()
+    {
+        if (selfAnimator.GetBehaviours<AnimationFinishedBehaviour>()[1].animationIsFinished)
+        {
+            _isAttacking = false;
+        }
+    }
+
     private void AIBehaviour()
     {
         Animator playerAnimator = player.GetComponent<Animator>();
@@ -53,17 +63,14 @@ public class EnemyHandle : MonoBehaviour
             int randomAttackIndex = Random.Range(0, 6);
             selfAnimator.SetFloat("RandomAttack", randomAttackIndex);
             selfAnimator.SetTrigger("Attack");
+            _isAttacking = true;
             selfNavMesh.speed = 0.0f;
-            selfAnimator.SetFloat("Speed", selfNavMesh.speed);
-            playerAnimator.SetTrigger("Die");
-            playerAnimator.SetBool("IsDead", true);
-            EnemyManager.instance.endGame = true;
         }
         else
         {
             selfNavMesh.speed = 5.0f;
-            selfAnimator.SetFloat("Speed", selfNavMesh.speed);
         }
+        selfAnimator.SetFloat("Speed", selfNavMesh.speed);
     }
 
     // Update is called once per frame
