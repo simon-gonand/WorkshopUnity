@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class SwordCollision : MonoBehaviour
 {
-    public UnityEvent<GameObject> CollisionDetected;
+    [SerializeField]
+    private PlayerController player;
 
     public void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Ennemies"))
+        EnemyHandle enemy = collision.gameObject.GetComponent<EnemyHandle>();
+        if (enemy != null && (player.isAttacking || player.isAttackingSprint))
         {
-            CollisionDetected.Invoke(collision.gameObject);
+            enemy.Die();
         }
     }
 }

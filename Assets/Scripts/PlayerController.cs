@@ -17,22 +17,26 @@ public class PlayerController : MonoBehaviour
     public Transform selfHips;
     public Rigidbody selfRigidbody;
     public Animator selfAnimator;
-    public ParticleSystem bloodDropFX;
     public Transform cameraPivot;
 
     private Vector3 currentMove;
     private Vector3 lastDirection;
     private float timeStamp;
     private int remainingJumps;
-    private bool isAttacking;
-    private bool isAttackingOnSprint;
+
+    private bool _isAttacking;
+    public bool isAttacking { get => _isAttacking; }
+
+    private bool _isAttackingSprint;
+    public bool isAttackingSprint { get => _isAttackingSprint; }
+
     private float speed;
 
     // Start is called before the first frame update
     void Start()
     {
         remainingJumps = maxAllowedJumps;
-        isAttacking = false;
+        _isAttacking = false;
         selfAnimator.SetBool("IsGrounded", false);
         speed = walkSpeed;
     }
@@ -111,26 +115,24 @@ public class PlayerController : MonoBehaviour
 
     private void IsAnimationFinished()
     {
-        if (selfAnimator.GetBehaviours<OnAttackBehaviour>()[0].animationIsFinished &&
-            selfAnimator.GetBehaviours<OnAttackBehaviour>()[1].animationIsFinished)
-        {
-            isAttacking = false;
-            isAttackingOnSprint = false;
-        }
+        if (selfAnimator.GetBehaviours<AnimationFinishedBehaviour>()[1].animationIsFinished)
+            _isAttacking = false;
+        if (selfAnimator.GetBehaviours<AnimationFinishedBehaviour>()[0].animationIsFinished)
+            _isAttackingSprint = false;
     }
 
     private void Attack()
     {
         IsAnimationFinished();
-        if (Input.GetButtonDown("Attack") && !isAttacking && !isAttackingOnSprint)
+        if (Input.GetButtonDown("Attack") && !isAttacking && !_isAttackingSprint)
         {
             if (sprintSpeed == speed)
             {
-                isAttackingOnSprint = true;
+                _isAttackingSprint = true;
             }
             else
             {
-                isAttacking = true;
+                _isAttacking = true;
                 int randomAttackIndex = Random.Range(0, 5);
                 selfAnimator.SetFloat("RandomAttack", randomAttackIndex);
             }
@@ -152,15 +154,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             //Reload scene from 0
-        }
-    }
-
-    public void OnSwordCollisionDetected(GameObject ennemy)
-    {
-        if (isAttacking || isAttackingOnSprint)
-        {
-            bloodDropFX.Play();
-            Destroy(ennemy);
         }
     }
 }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class OnAttackBehaviour : StateMachineBehaviour
+public class AnimationFinishedBehaviour : StateMachineBehaviour
 {
     [System.NonSerialized]
-    public bool animationIsFinished = true;
+    public bool animationIsFinished = false;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
