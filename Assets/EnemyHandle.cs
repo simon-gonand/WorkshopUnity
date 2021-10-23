@@ -38,7 +38,12 @@ public class EnemyHandle : MonoBehaviour
 
     private void AIBehaviour()
     {
-        if (isDie) return;
+        Animator playerAnimator = player.GetComponent<Animator>();
+        if (isDie || playerAnimator.GetBool("IsDead"))
+        {
+            selfNavMesh.speed = 0.0f;
+            return;
+        }
 
         selfNavMesh.SetDestination(player.position);
         if (Vector3.Distance(player.position, selfHips.position) < 1.5f)
@@ -48,11 +53,8 @@ public class EnemyHandle : MonoBehaviour
             selfAnimator.SetTrigger("Attack");
             selfNavMesh.speed = 0.0f;
             selfAnimator.SetFloat("Speed", selfNavMesh.speed);
-            Animator playerAnimator = player.GetComponent<Animator>();
-            if (!playerAnimator.GetBool("IsDead")) {
-                playerAnimator.SetTrigger("Die");
-                playerAnimator.SetBool("IsDead", true);
-            }
+            playerAnimator.SetTrigger("Die");
+            playerAnimator.SetBool("IsDead", true);
         }
         else
         {
