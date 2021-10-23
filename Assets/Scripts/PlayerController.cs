@@ -91,10 +91,24 @@ public class PlayerController : MonoBehaviour
         {
             --remainingJumps;
             isGrounded = false;
+            selfAnimator.SetTrigger("Jump");
             selfAnimator.SetBool("IsGrounded", false);
             ++currentMove.y;
-            selfRigidbody?.AddForce((selfModel.forward + Vector3.up)* currentMove.y * jumpForce, ForceMode.Impulse);
+            selfRigidbody?.AddForce(Vector3.up * currentMove.y * jumpForce, ForceMode.Impulse);
         }
+        /*if (!isGrounded)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(self.position, -Vector3.up, out hit, 0.1f))
+            {
+                if (hit.collider.transform.position.y < selfHips.position.y)
+                {
+                    isGrounded = true;
+                    selfAnimator.SetBool("IsGrounded", true);
+                    remainingJumps = maxAllowedJumps;
+                }
+            }
+        }*/
     }
 
     private void OnCollisionEnter(Collision collision)
