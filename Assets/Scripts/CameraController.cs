@@ -10,8 +10,8 @@ public class CameraController : MonoBehaviour
 
     [Header("References")]
     public Transform player;
-    public Transform Rig;
-    public Transform Pivot;
+    public Transform rig;
+    public Transform pivot;
     public Transform self;
 
     private Vector2 cameraRotation;
@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        offset = Rig.position - player.position;
+        offset = rig.position - player.position;
         isInTexture = false;
     }
 
@@ -47,7 +47,7 @@ public class CameraController : MonoBehaviour
 
     private void HorizontalUpdate()
     {
-        Rig.position = player.position + offset;
+        rig.position = player.position + offset;
     }
 
     private void VerticalUpdate()
@@ -57,8 +57,8 @@ public class CameraController : MonoBehaviour
         cameraRotation.x -= Input.GetAxis("RVertical") * speed;
         cameraRotation.x = Mathf.Clamp(cameraRotation.x, minLimitYCam, maxLimitYCam);
 
-        Rig.rotation = Quaternion.Euler(0.0f, cameraRotation.y, 0.0f);
-        Pivot.localRotation = Quaternion.Euler(cameraRotation.x, 0.0f, 0.0f);
+        rig.rotation = Quaternion.Euler(0.0f, cameraRotation.y, 0.0f);
+        pivot.localRotation = Quaternion.Euler(cameraRotation.x, 0.0f, 0.0f);
         self.LookAt(player.position);
     }
 
@@ -67,5 +67,6 @@ public class CameraController : MonoBehaviour
     {
         HorizontalUpdate();
         VerticalUpdate();
+        offset = rig.position - player.position;
     }
 }
