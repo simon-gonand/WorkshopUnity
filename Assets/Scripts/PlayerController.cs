@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
-    public float speed;
+    public float walkSpeed;
+    public float sprintSpeed;
     public AnimationCurve groundAcceleration;
     public int maxAllowedJumps;
     public float jumpForce;
@@ -23,13 +24,29 @@ public class PlayerController : MonoBehaviour
     private float timeStamp;
     private int remainingJumps;
     private bool isGrounded;
+    private float speed;
 
     // Start is called before the first frame update
     void Start()
     {
         remainingJumps = maxAllowedJumps;
         isGrounded = false;
-        selfAnimator.SetBool("IsGrounded", false);        
+        selfAnimator.SetBool("IsGrounded", false);
+        speed = walkSpeed;
+    }
+
+    private void IsSprinting()
+    {
+        if (Input.GetButtonDown("Sprint"))
+        {
+            selfAnimator.SetBool("IsSprinting", true);
+            speed = sprintSpeed;
+        }
+        else if (Input.GetButtonUp("Sprint"))
+        {
+            selfAnimator.SetBool("IsSprinting", false);
+            speed = walkSpeed;
+        }
     }
 
     private void HorizontalUpdate()
@@ -95,6 +112,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         currentMove = Vector3.zero;
+        IsSprinting();
         HorizontalUpdate();
         VerticalUpdate();
         if (Input.GetKeyDown(KeyCode.R))
