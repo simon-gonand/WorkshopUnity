@@ -43,6 +43,7 @@ public class EnemyHandle : MonoBehaviour
         {
             selfNavMesh.speed = 0.0f;
             selfAnimator.SetFloat("Speed", selfNavMesh.speed);
+            PlayerController.instance.DisableControls();
             return;
         }
 

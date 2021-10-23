@@ -12483,6 +12483,7 @@ MonoBehaviour:
   maxEnnemies: 30
   spawnEvery: 3
   enemyObject: {fileID: 3388835901242536738, guid: d5bf19fedc6a6ae48b0237153114f978, type: 3}
+  endGame: 0
   nbEnemies: 0
 --- !u!4 &2093888928
 Transform:

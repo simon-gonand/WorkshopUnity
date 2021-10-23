@@ -24,14 +24,14 @@ public class PlayerController : MonoBehaviour
     private Vector3 lastDirection;
     private float timeStamp;
     private int remainingJumps;
+    private float speed;
+    private bool areControlsEnabled;
 
     private bool _isAttacking;
     public bool isAttacking { get => _isAttacking; }
 
     private bool _isAttackingSprint;
     public bool isAttackingSprint { get => _isAttackingSprint; }
-
-    private float speed;
 
     public static PlayerController instance;
 
@@ -47,6 +47,12 @@ public class PlayerController : MonoBehaviour
         _isAttacking = false;
         selfAnimator.SetBool("IsGrounded", false);
         speed = walkSpeed;
+        areControlsEnabled = true;
+    }
+
+    public void DisableControls()
+    {
+        areControlsEnabled = false;
     }
 
     private void IsSprinting()
@@ -151,13 +157,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentMove = Vector3.zero;
-        Attack();
-        IsSprinting();
-        if (!isAttacking)
+        if (areControlsEnabled)
         {
-            HorizontalUpdate();
-            VerticalUpdate();
+            currentMove = Vector3.zero;
+            Attack();
+            IsSprinting();
+            if (!isAttacking)
+            {
+                HorizontalUpdate();
+                VerticalUpdate();
+            }
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
