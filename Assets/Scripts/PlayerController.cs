@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public Transform selfHips;
     public Rigidbody selfRigidbody;
     public Animator selfAnimator;
+    public ParticleSystem bloodDropFX;
     public Transform cameraPivot;
 
     private Vector3 currentMove;
@@ -157,6 +158,9 @@ public class PlayerController : MonoBehaviour
     public void OnSwordCollisionDetected(GameObject ennemy)
     {
         if (isAttacking || isAttackingOnSprint)
+        {
+            bloodDropFX.Play();
             Destroy(ennemy);
+        }
     }
 }
