@@ -41,7 +41,6 @@ public class EnemyHandle : MonoBehaviour
         if (isDie) return;
 
         selfNavMesh.SetDestination(player.position);
-        Debug.Log(Vector3.Distance(player.position, selfHips.position));
         if (Vector3.Distance(player.position, selfHips.position) < 1.5f)
         {
             int randomAttackIndex = Random.Range(0, 6);
@@ -49,6 +48,11 @@ public class EnemyHandle : MonoBehaviour
             selfAnimator.SetTrigger("Attack");
             selfNavMesh.speed = 0.0f;
             selfAnimator.SetFloat("Speed", selfNavMesh.speed);
+            Animator playerAnimator = player.GetComponent<Animator>();
+            if (!playerAnimator.GetBool("IsDead")) {
+                playerAnimator.SetTrigger("Die");
+                playerAnimator.SetBool("IsDead", true);
+            }
         }
         else
         {
