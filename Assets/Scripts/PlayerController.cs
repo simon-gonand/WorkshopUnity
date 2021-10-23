@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private float timeStamp;
     private int remainingJumps;
     private bool isGrounded;
+    private bool isAttacking;
     private float speed;
 
     // Start is called before the first frame update
@@ -31,6 +32,7 @@ public class PlayerController : MonoBehaviour
     {
         remainingJumps = maxAllowedJumps;
         isGrounded = false;
+        isAttacking = false;
         selfAnimator.SetBool("IsGrounded", false);
         speed = walkSpeed;
     }
@@ -96,19 +98,6 @@ public class PlayerController : MonoBehaviour
             ++currentMove.y;
             selfRigidbody?.AddForce(Vector3.up * currentMove.y * jumpForce, ForceMode.Impulse);
         }
-        /*if (!isGrounded)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(self.position, -Vector3.up, out hit, 0.1f))
-            {
-                if (hit.collider.transform.position.y < selfHips.position.y)
-                {
-                    isGrounded = true;
-                    selfAnimator.SetBool("IsGrounded", true);
-                    remainingJumps = maxAllowedJumps;
-                }
-            }
-        }*/
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -122,13 +111,34 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void IsAnimationFinished()
+    {
+        if (selfAnimator.GetBehaviours<OnAttackBehaviour>()[0].animationIsFinished)
+            isAttacking = false;
+    }
+
+    private void Attack()
+    {
+        IsAnimationFinished();
+        if (Input.GetButtonDown("Attack") && !isAttacking)
+        {
+
+            selfAnimator.SetTrigger("Attack");
+            isAttacking = true;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
         currentMove = Vector3.zero;
+        Attack();
         IsSprinting();
-        HorizontalUpdate();
-        VerticalUpdate();
+        if (!isAttacking)
+        {
+            HorizontalUpdate();
+            VerticalUpdate();
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             //Reload scene from 0
