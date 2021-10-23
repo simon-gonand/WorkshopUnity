@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     private int remainingJumps;
     private bool isGrounded;
     private bool isAttacking;
+    private bool isAttackingOnSprint;
     private float speed;
 
     // Start is called before the first frame update
@@ -113,18 +114,30 @@ public class PlayerController : MonoBehaviour
 
     private void IsAnimationFinished()
     {
-        if (selfAnimator.GetBehaviours<OnAttackBehaviour>()[0].animationIsFinished)
+        if (selfAnimator.GetBehaviours<OnAttackBehaviour>()[0].animationIsFinished &&
+            selfAnimator.GetBehaviours<OnAttackBehaviour>()[1].animationIsFinished)
+        {
             isAttacking = false;
+            isAttackingOnSprint = false;
+        }
     }
 
     private void Attack()
     {
         IsAnimationFinished();
-        if (Input.GetButtonDown("Attack") && !isAttacking)
+        if (Input.GetButtonDown("Attack") && !isAttacking && !isAttackingOnSprint)
         {
-
+            if (sprintSpeed == speed)
+            {
+                isAttackingOnSprint = true;
+            }
+            else
+            {
+                isAttacking = true;
+                int randomAttackIndex = Random.Range(0, 5);
+                selfAnimator.SetFloat("RandomAttack", randomAttackIndex);
+            }
             selfAnimator.SetTrigger("Attack");
-            isAttacking = true;
         }
     }
 
