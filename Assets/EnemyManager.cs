@@ -14,6 +14,7 @@ public class EnemyManager : MonoBehaviour
     private GameObject enemyObject;
 
     private bool enemyCanSpawn;
+    public bool endGame;
 
     public static EnemyManager instance;
     public int nbEnemies;
@@ -27,6 +28,7 @@ public class EnemyManager : MonoBehaviour
     {
         enemyCanSpawn = true;
         nbEnemies = 0;
+        endGame = false;
     }
 
     IEnumerator Timer()
@@ -39,7 +41,7 @@ public class EnemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemyCanSpawn && nbEnemies < maxEnnemies)
+        if (enemyCanSpawn && nbEnemies < maxEnnemies && !endGame)
         {
             int spawnIndex = Random.Range(0, 3);
             GameObject ethan = Instantiate(enemyObject, spawnPoints[spawnIndex], Quaternion.Euler(0.0f, 0.0f, 0.0f));

@@ -42,6 +42,7 @@ public class EnemyHandle : MonoBehaviour
         if (isDie || playerAnimator.GetBool("IsDead"))
         {
             selfNavMesh.speed = 0.0f;
+            selfAnimator.SetFloat("Speed", selfNavMesh.speed);
             return;
         }
 
@@ -55,6 +56,7 @@ public class EnemyHandle : MonoBehaviour
             selfAnimator.SetFloat("Speed", selfNavMesh.speed);
             playerAnimator.SetTrigger("Die");
             playerAnimator.SetBool("IsDead", true);
+            EnemyManager.instance.endGame = true;
         }
         else
         {
