@@ -23,7 +23,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 lastDirection;
     private float timeStamp;
     private int remainingJumps;
-    private bool isGrounded;
     private bool isAttacking;
     private bool isAttackingOnSprint;
     private float speed;
@@ -32,7 +31,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         remainingJumps = maxAllowedJumps;
-        isGrounded = false;
         isAttacking = false;
         selfAnimator.SetBool("IsGrounded", false);
         speed = walkSpeed;
@@ -93,7 +91,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && remainingJumps > 0)
         {
             --remainingJumps;
-            isGrounded = false;
             selfAnimator.SetTrigger("Jump");
             selfAnimator.SetBool("IsGrounded", false);
             ++currentMove.y;
@@ -106,7 +103,6 @@ public class PlayerController : MonoBehaviour
         // If player is touching the ground
         if (collision.transform.position.y < selfHips.position.y)
         {
-            isGrounded = true;
             selfAnimator.SetBool("IsGrounded", true);
             remainingJumps = maxAllowedJumps;
         }
@@ -156,5 +152,11 @@ public class PlayerController : MonoBehaviour
         {
             //Reload scene from 0
         }
+    }
+
+    public void OnSwordCollisionDetected(GameObject ennemy)
+    {
+        if (isAttacking || isAttackingOnSprint)
+            Destroy(ennemy);
     }
 }
