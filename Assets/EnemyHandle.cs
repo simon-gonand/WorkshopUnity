@@ -36,11 +36,31 @@ public class EnemyHandle : MonoBehaviour
         }
     }
 
+    private void AIBehaviour()
+    {
+        if (isDie) return;
+
+        selfNavMesh.SetDestination(player.position);
+        Debug.Log(Vector3.Distance(player.position, selfHips.position));
+        if (Vector3.Distance(player.position, selfHips.position) < 1.5f)
+        {
+            int randomAttackIndex = Random.Range(0, 6);
+            selfAnimator.SetFloat("RandomAttack", randomAttackIndex);
+            selfAnimator.SetTrigger("Attack");
+            selfNavMesh.speed = 0.0f;
+            selfAnimator.SetFloat("Speed", selfNavMesh.speed);
+        }
+        else
+        {
+            selfNavMesh.speed = 5.0f;
+            selfAnimator.SetFloat("Speed", selfNavMesh.speed);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(!isDie)
-            selfNavMesh.SetDestination(player.position);
+        AIBehaviour();
         IsDieAnimationFinished();
     }
 }
