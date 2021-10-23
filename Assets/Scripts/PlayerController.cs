@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Update animations
-        selfAnimator.SetFloat("Speed", currentMove.x + currentMove.z);
+        selfAnimator.SetFloat("Speed", Mathf.Abs(currentMove.x) + Mathf.Abs(currentMove.z));
     }
 
     private void VerticalUpdate()
