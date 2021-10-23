@@ -32,6 +32,13 @@ public class PlayerController : MonoBehaviour
 
     private float speed;
 
+    public static PlayerController instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -133,7 +140,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 _isAttacking = true;
-                int randomAttackIndex = Random.Range(0, 5);
+                int randomAttackIndex = Random.Range(0, 6);
                 selfAnimator.SetFloat("RandomAttack", randomAttackIndex);
             }
             selfAnimator.SetTrigger("Attack");
