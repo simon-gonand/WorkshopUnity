@@ -39,4 +39,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxAllowedJumps: 2
-  jumpForce: 3
+  jumpForce: 5
