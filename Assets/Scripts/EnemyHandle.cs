@@ -78,7 +78,7 @@ public class EnemyHandle : MonoBehaviour
         selfNavMesh.SetDestination(player.position);
         
         // If the player is close enough then attack
-        if (Vector3.Distance(player.position, selfHips.position) < 1.5f)
+        if (Vector3.Distance(player.position, selfHips.position) < 1.5f && !_isAttacking)
         {
             // Select a random attack animation
             int randomAttackIndex = Random.Range(0, 6);
