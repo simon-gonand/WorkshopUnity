@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private bool _isAttackingSprint;
     public bool isAttackingSprint { get => _isAttackingSprint; }
 
+    // Player is a singleton
     public static PlayerController instance;
 
     private void Awake()
@@ -50,11 +51,13 @@ public class PlayerController : MonoBehaviour
         areControlsEnabled = true;
     }
 
+    // Funtion that disable the controls of the player but not the camera
     public void DisableControls()
     {
         areControlsEnabled = false;
     }
 
+    // Test if player is sprinting to adapt the speed and the animations
     private void IsSprinting()
     {
         if (Input.GetButtonDown("Sprint"))
@@ -127,6 +130,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Test if the animations of attacks are ended
+    // If they are ended then the player is not attacking anymore and the sword cannot kill anyone
     private void IsAnimationFinished()
     {
         if (selfAnimator.GetBehaviours<AnimationFinishedBehaviour>()[1].animationIsFinished)
@@ -135,11 +140,16 @@ public class PlayerController : MonoBehaviour
             _isAttackingSprint = false;
     }
 
+    // Process with attack animations
     private void Attack()
     {
+        // Check if the player is still attacking or not
         IsAnimationFinished();
+
+        // If the player is not attacking and if he wants to attack
         if (Input.GetButtonDown("Attack") && !isAttacking && !_isAttackingSprint)
         {
+            // if player is sprinting then the player will process the Sprint attack animation
             if (sprintSpeed == speed)
             {
                 _isAttackingSprint = true;
@@ -147,9 +157,11 @@ public class PlayerController : MonoBehaviour
             else
             {
                 _isAttacking = true;
+                // Selecting a random attack animation
                 int randomAttackIndex = Random.Range(0, 6);
                 selfAnimator.SetFloat("RandomAttack", randomAttackIndex);
             }
+            // Update animation
             selfAnimator.SetTrigger("Attack");
         }
     }
@@ -162,12 +174,15 @@ public class PlayerController : MonoBehaviour
             currentMove = Vector3.zero;
             Attack();
             IsSprinting();
+            // When player is attacking (without sprint) he cannot move or jump
             if (!isAttacking)
             {
                 HorizontalUpdate();
                 VerticalUpdate();
             }
         }
+
+        // Input to reload the game
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(0);

@@ -12,12 +12,16 @@ public class EnemyManager : MonoBehaviour
     private float spawnEvery;
     [SerializeField]
     private GameObject enemyObject;
+    
 
     private bool enemyCanSpawn;
-    public bool endGame;
+    private bool _endGame;
+    public bool endGame {get => _endGame; set { _endGame = value; } }
+    private int _nbEnemies;
+    public int nbEnemies { get => _nbEnemies; set { _nbEnemies += value; } }
 
-    public static EnemyManager instance;
-    public int nbEnemies;
+    // EnemyManager is a singleton
+    public static EnemyManager instance;  
 
     private void Awake()
     {
@@ -27,10 +31,11 @@ public class EnemyManager : MonoBehaviour
     private void Start()
     {
         enemyCanSpawn = true;
-        nbEnemies = 0;
-        endGame = false;
+        _nbEnemies = 0;
+        _endGame = false;
     }
 
+    // Coroutine that is waiting several seconds before allowing another spawn of enemy
     IEnumerator Timer()
     {
         enemyCanSpawn = false;
@@ -41,11 +46,16 @@ public class EnemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // If a enemy can spawn due to the number of enemies on the map or if the cooldown has been finished
         if (enemyCanSpawn && nbEnemies < maxEnnemies && !endGame)
         {
+            // Randomly choose a spawn point on the map
             int spawnIndex = Random.Range(0, spawnPoints.Length);
-            GameObject ethan = Instantiate(enemyObject, spawnPoints[spawnIndex], Quaternion.Euler(0.0f, 0.0f, 0.0f));
-            ++nbEnemies;
+            // Enemy spawn
+            Instantiate(enemyObject, spawnPoints[spawnIndex], Quaternion.Euler(0.0f, 0.0f, 0.0f));
+            // Increase number of enemies on the map
+            ++_nbEnemies;
+            // Start cooldown before another enemy can spawn
             StartCoroutine(Timer());
         }
             

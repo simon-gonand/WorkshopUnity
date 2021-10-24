@@ -21,52 +21,57 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //offset = rig.position - player.position;
         isInTexture = false;
     }
 
-
-    public void OnTriggerExit(Collider other)
+    // When the camera is entering inside an object
+   /* public void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player"))
+        float newAlpha = 0.0f;
+        // If it is in texture and there is a collision with the camera, then it means that the camera is going out from the object
+        if (isInTexture)
         {
-            float newAlpha = 1.0f;
-            /*if (isInTexture)
-            {
-                newAlpha = 1.0f;
-            }*/
-
-            Color[] meshColor = other.gameObject.GetComponent<MeshRenderer>().material.GetColorArray("_Color");
-            Color newAlphaColor = new Color(meshColor[0].r, meshColor[0].g, meshColor[0].b, newAlpha);
-            Color[] newAlphaColorArray = { newAlphaColor };
-            other.gameObject.GetComponent<MeshRenderer>().material.SetColorArray("_Color", newAlphaColorArray);
-
-            isInTexture = !isInTexture;
+            newAlpha = 1.0f;
         }
-    }
 
-    private void HorizontalUpdate()
+        // Update alpha transparency
+        Color[] meshColor = other.gameObject.GetComponent<MeshRenderer>().material.GetColorArray("_Color");
+        Color newAlphaColor = new Color(meshColor[0].r, meshColor[0].g, meshColor[0].b, newAlpha);
+        Color[] newAlphaColorArray = { newAlphaColor };
+        other.gameObject.GetComponent<MeshRenderer>().material.SetColorArray("_Color", newAlphaColorArray);
+
+        // Update if the camera is inside the object or not
+        isInTexture = !isInTexture;
+    }*/
+
+    private void TranslationUpdate()
     {
+        // Camera translate with the player movements
         rig.position = player.position + offset;
     }
 
-    private void VerticalUpdate()
+    // Rotate camera with the right stick around the player
+    private void RotationUpdate()
     {
-        // Rotate camera with the right stick around the player
+        // Get inputs from the right stick and clamp
         cameraRotation.y -= Input.GetAxis("RHorizontal") * speed;
         cameraRotation.x -= Input.GetAxis("RVertical") * speed;
         cameraRotation.x = Mathf.Clamp(cameraRotation.x, minLimitYCam, maxLimitYCam);
 
+        // Process rotations on the two axis
         rig.rotation = Quaternion.Euler(0.0f, cameraRotation.y, 0.0f);
         pivot.localRotation = Quaternion.Euler(cameraRotation.x, 0.0f, 0.0f);
+
+        // Camera is looking at the player so it can rotate around it
         self.LookAt(player.position);
     }
 
     // Update is called once per frame
     void Update()
     {
-        HorizontalUpdate();
-        VerticalUpdate();
+        TranslationUpdate();
+        RotationUpdate();
+        // Update the distance between the camera and the player to prevent that the camera is zooming when rotating around the players
         offset = rig.position - player.position;
     }
 }
