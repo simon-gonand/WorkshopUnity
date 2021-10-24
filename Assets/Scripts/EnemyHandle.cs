@@ -49,11 +49,13 @@ public class EnemyHandle : MonoBehaviour
     private void AIBehaviour()
     {
         Animator playerAnimator = player.GetComponent<Animator>();
-        if (isDie || playerAnimator.GetBool("IsDead"))
+        bool isPlayerDead = playerAnimator.GetBool("IsDead");
+        if (isDie || isPlayerDead)
         {
             selfNavMesh.speed = 0.0f;
             selfAnimator.SetFloat("Speed", selfNavMesh.speed);
-            PlayerController.instance.DisableControls();
+            if (isPlayerDead)
+                PlayerController.instance.DisableControls();
             return;
         }
 
