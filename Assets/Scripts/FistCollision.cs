@@ -15,8 +15,11 @@ public class FistCollision : MonoBehaviour
         {
             // Update the animator of the player
             Animator playerAnimator = other.GetComponent<Animator>();
-            playerAnimator.SetTrigger("Die");
-            playerAnimator.SetBool("IsDead", true);
+            if (!playerAnimator.GetBool("IsDead"))
+            {
+                playerAnimator.SetTrigger("Die");
+                playerAnimator.SetBool("IsDead", true);
+            }
 
             // The player has died, the game is finished
             EnemyManager.instance.endGame = true;
