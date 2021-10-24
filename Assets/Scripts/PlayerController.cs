@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
         self?.Translate(rightWithoutY * acceleration * currentMove.x * Time.deltaTime * speed, Space.World);
         self?.Translate(forwardWithoutY * acceleration * currentMove.z * Time.deltaTime * speed, Space.World);
 
-        // Rotate the direction where the player move
+        // Rotate the direction where the player move according to the position of the camera
         if (currentMove != Vector3.zero)
         {
             // Calculate the direction of the player movement

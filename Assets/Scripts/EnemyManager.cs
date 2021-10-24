@@ -43,7 +43,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (enemyCanSpawn && nbEnemies < maxEnnemies && !endGame)
         {
-            int spawnIndex = Random.Range(0, 3);
+            int spawnIndex = Random.Range(0, spawnPoints.Length);
             GameObject ethan = Instantiate(enemyObject, spawnPoints[spawnIndex], Quaternion.Euler(0.0f, 0.0f, 0.0f));
             ++nbEnemies;
             StartCoroutine(Timer());
