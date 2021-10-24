@@ -5,14 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Stats")]
-    public float walkSpeed;
-    public float sprintSpeed;
-    public AnimationCurve groundAcceleration;
-    public int maxAllowedJumps;
-    public float jumpForce;
-
     [Header("References")]
+    public PlayerPresets playerPreset;
     public Transform self;
     public Transform selfModel;
     public Transform selfHips;
@@ -44,10 +38,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        remainingJumps = maxAllowedJumps;
+        remainingJumps = playerPreset.maxAllowedJumps;
         _isAttacking = false;
         selfAnimator.SetBool("IsGrounded", false);
-        speed = walkSpeed;
+        speed = playerPreset.walkSpeed;
         areControlsEnabled = true;
     }
 
@@ -63,12 +57,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Sprint"))
         {
             selfAnimator.SetBool("IsSprinting", true);
-            speed = sprintSpeed;
+            speed = playerPreset.sprintSpeed;
         }
         else if (Input.GetButtonUp("Sprint"))
         {
             selfAnimator.SetBool("IsSprinting", false);
-            speed = walkSpeed;
+            speed = playerPreset.walkSpeed;
         }
     }
 
@@ -82,7 +76,7 @@ public class PlayerController : MonoBehaviour
         if (Vector3.Dot(currentMove, lastDirection) < 0.0f)
             timeStamp = Time.time;
         float accelerationStep = Time.time - timeStamp;
-        float acceleration = groundAcceleration.Evaluate(accelerationStep);
+        float acceleration = playerPreset.groundAcceleration.Evaluate(accelerationStep);
 
         // Get forward and right vector of the camera without the Y axis
         Vector3 forwardWithoutY = new Vector3(cameraPivot.forward.x, 0.0f, cameraPivot.forward.z);
@@ -116,7 +110,7 @@ public class PlayerController : MonoBehaviour
             selfAnimator.SetTrigger("Jump");
             selfAnimator.SetBool("IsGrounded", false);
             ++currentMove.y;
-            selfRigidbody?.AddForce(Vector3.up * currentMove.y * jumpForce, ForceMode.Impulse);
+            selfRigidbody?.AddForce(Vector3.up * currentMove.y * playerPreset.jumpForce, ForceMode.Impulse);
         }
     }
 
@@ -126,7 +120,7 @@ public class PlayerController : MonoBehaviour
         if (collision.transform.position.y < selfHips.position.y)
         {
             selfAnimator.SetBool("IsGrounded", true);
-            remainingJumps = maxAllowedJumps;
+            remainingJumps = playerPreset.maxAllowedJumps;
         }
     }
 
@@ -150,7 +144,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Attack") && !isAttacking && !_isAttackingSprint)
         {
             // if player is sprinting then the player will process the Sprint attack animation
-            if (sprintSpeed == speed)
+            if (playerPreset.sprintSpeed == speed)
             {
                 _isAttackingSprint = true;
             }

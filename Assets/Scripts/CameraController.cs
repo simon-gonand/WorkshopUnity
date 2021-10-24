@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [Header("Stat")]
-    public float speed;
-    public float minLimitYCam, maxLimitYCam;
-
     [Header("References")]
     public Transform player;
     public Transform rig;
     public Transform pivot;
     public Transform self;
+    public CameraPresets cameraPreset;
 
     private Vector2 cameraRotation;
     private Vector3 offset;
@@ -54,9 +51,9 @@ public class CameraController : MonoBehaviour
     private void RotationUpdate()
     {
         // Get inputs from the right stick and clamp
-        cameraRotation.y -= Input.GetAxis("RHorizontal") * speed;
-        cameraRotation.x -= Input.GetAxis("RVertical") * speed;
-        cameraRotation.x = Mathf.Clamp(cameraRotation.x, minLimitYCam, maxLimitYCam);
+        cameraRotation.y -= Input.GetAxis("RHorizontal") * cameraPreset.speed;
+        cameraRotation.x -= Input.GetAxis("RVertical") * cameraPreset.speed;
+        cameraRotation.x = Mathf.Clamp(cameraRotation.x, cameraPreset.minLimitYCam, cameraPreset.maxLimitYCam);
 
         // Process rotations on the two axis
         rig.rotation = Quaternion.Euler(0.0f, cameraRotation.y, 0.0f);

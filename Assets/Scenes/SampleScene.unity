@@ -217,6 +217,10 @@ PrefabInstance:
       propertyPath: cameraPivot
       value: 
       objectReference: {fileID: 788021262}
+    - target: {fileID: 8272664893696662540, guid: 2514b14ab9a76b740a661bc47ffc010c, type: 3}
+      propertyPath: playerPreset
+      value: 
+      objectReference: {fileID: 11400000, guid: 68e013224696f3347926e14411e6af9a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2514b14ab9a76b740a661bc47ffc010c, type: 3}
 --- !u!1 &150722810
@@ -11448,13 +11452,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0311cdf8923882e42a5a803e36fbb1dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  minLimitYCam: -50
-  maxLimitYCam: 50
   player: {fileID: 708000087}
   rig: {fileID: 652948978}
   pivot: {fileID: 788021262}
   self: {fileID: 963194228}
+  cameraPreset: {fileID: 11400000, guid: 6735d7f3f6c1c3242a3213bf6161f5ba, type: 2}
 --- !u!65 &963194230
 BoxCollider:
   m_ObjectHideFlags: 0
